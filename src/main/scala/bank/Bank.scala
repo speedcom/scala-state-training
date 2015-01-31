@@ -34,3 +34,12 @@ object Bank_2 {
     account => (account.sum, account :+ x)
   }
 }
+
+/**
+ * Representing a state action
+ * A State wraps a function run which, given an S, performs
+ * some computation and produces an A and s new S.
+ */
+case class State[S,A](run: S => (A,S)) {
+  
+}
