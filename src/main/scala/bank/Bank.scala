@@ -18,3 +18,19 @@ object Bank_1 {
   }
 
 }
+
+
+/**
+ * IMPROVEMENTS
+ * Immutable: account reference can not change
+ * Declarative: evaluating deposit does not run the transaction
+ * Consistent: account accesses are certain to be identical
+ */
+object Bank_2 {
+
+  type Account = List[Float]
+
+  def deposit(x: Float): Account => (Float, Account) = {
+    account => (account.sum, account :+ x)
+  }
+}
