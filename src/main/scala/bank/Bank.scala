@@ -94,7 +94,55 @@ object StateFlatMapExample extends App {
 
 }
 
+object StateComposabilityExample extends App {
 
+  type Account = List[Float]
+  type Tx[A] = State[Account, A]
+
+  val balance: Tx[Float] = State { account =>
+    (account.sum, account)
+  }
+
+  def contribute(x: Float): Tx[Unit] = State { account =>
+    ((), account :+ x)
+  }
+
+  def deduct(x: Float): Tx[Float] = State { account =>
+    if(account.sum >= x)
+      (x, account :+ (-x))
+    else
+      (0, account)
+  }
+
+  /*
+  COMPOSABILITY
+  - Big state actions can be constructed from little state actions
+  - Composition induces no side effects
+  - Composition triggers no state transitions
+   */
+  def deposit(x: Float): Tx[(Float, Float)] =
+    for {
+      _ <- contribute(x) // Tx[Unit]
+      b <- balance       // Tx[Float]
+    } yield (0f, b)
+
+  def withdraw(x: Float): Tx[(Float, Float)] =
+    for {
+      y <- deduct(x)     // Tx[Float]
+      b <- balance       // Tx[Float]
+    } yield (y, b)
+
+  /*
+  REUSABILITY
+  State actions can be composed in different ways
+  to create different behavior
+   */
+  def depositThenWithdraw(d: Float, w: Float): Tx[(Float, Float)] =
+    for {
+      _  <- deposit(d)
+      ww <- withdraw(w)
+    } yield ww
+}
 
 
 
