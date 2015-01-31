@@ -49,7 +49,12 @@ case class State[S,A](run: S => (A,S)) {
   def map[B](f: A => B): State[S, B] =
     State { run andThen { case (a, s) => (f(a), s) }}
 
-
+  /*
+  flatMap builds a new state action that, once run, uses the output
+  to compute the result of another state action
+   */
+  def flatMap[B](f: A => State[S, B]): State[S, B] =
+    State { run andThen { case (a, s) => f(a).run(s) }}
 }
 
 // Composing with pure functions
@@ -63,6 +68,29 @@ object StateMapExample extends App {
   }
 
   val report: Tx[String] = balance map { sum => "Your balance is " + sum }
+
+}
+
+// Composing with state actions
+object StateFlatMapExample extends App {
+
+  type Account = List[Float]
+  type Tx[A] = State[Account, A]
+
+  def deduct(x: Float): Tx[Float] = State { account =>
+    if(account.sum >= x)
+      (x, account :+ (-x))
+    else
+      (0, account)
+  }
+
+  def deductWithFee(x: Float): Tx[Float] =
+    deduct(x) flatMap { balance =>
+      State { account =>
+        val fee = 3.0F
+        (balance + fee, account :+ (-fee))
+      }
+    }
 
 }
 
