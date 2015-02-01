@@ -144,6 +144,26 @@ object StateComposabilityExample extends App {
     } yield ww
 }
 
+// TODO 
+object Interpreter extends App {
+  import StateComposabilityExample._
+
+  var account: Account = Nil
+
+  def run(x: Tx[(Float, Float)]): ((Float, Float), Account) = {
+    val ((w,b), acc) = x.run(account)
+    account = acc
+    ((w,b), acc)
+  }
+
+  println(s"account: $account")
+
+  run(depositThenWithdraw(30, 50))
+
+
+  println(s"account: $account")
+}
+
 
 
 
