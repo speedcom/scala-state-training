@@ -144,13 +144,13 @@ object StateComposabilityExample extends App {
     } yield ww
 }
 
-// TODO 
+// TODO - got NullPointerException
 object Interpreter extends App {
   import StateComposabilityExample._
 
   var account: Account = Nil
 
-  def run(x: Tx[(Float, Float)]): ((Float, Float), Account) = {
+  def runAction(x: Tx[(Float, Float)]): ((Float, Float), Account) = {
     val ((w,b), acc) = x.run(account)
     account = acc
     ((w,b), acc)
@@ -158,8 +158,8 @@ object Interpreter extends App {
 
   println(s"account: $account")
 
-  run(depositThenWithdraw(30, 50))
-
+//  runAction()
+  println(depositThenWithdraw(30, 50).run(account))
 
   println(s"account: $account")
 }
