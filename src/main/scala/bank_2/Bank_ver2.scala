@@ -60,6 +60,10 @@ object BankOperation {
   type Bank = Map[Account, TransactionHistory]
   type Bx[A] = State[Bank, A]
 
+  def findTh(account: Account): Bx[Option[TransactionHistory]] = State { bank =>
+    (bank.get(account), bank)
+  }
+
 }
 
 object BankRoot {
@@ -67,20 +71,28 @@ object BankRoot {
 
   val bank: Bank = Map(
     "Matt"   -> List(50f),
-    "Justin" -> List(50f))
+    "Justin" -> List(50f, 100f, -40f, 700f))
 
 }
 
 object BankApp extends App {
   import BankRoot._
   import AccountOperation._
+  import BankOperation._
 
   // TODO need to persist changes
   object UcContributeCash {
     def execute(bankAccount: Account, d: Float) = {
-      var account = bank(bankAccount)
-      val (_, acc) = contribute(d).run(account)
-      account = acc
+
+      val (thOption, _) = BankOperation.findTh(bankAccount).run(bank)
+
+      val contributed = for {
+        th <- thOption
+      } yield {
+        contribute(d).run(th)
+      }
+
+      println(s"contributed: $contributed")
     }
   }
 
