@@ -28,7 +28,6 @@ package object StateDomain {
 object AccountOperation {
   import StateDomain.Tx
   
-
   def contribute(x: Float): Tx[Unit] = State { account =>
     ((), account :+ x)
   }
@@ -76,32 +75,50 @@ object BankOperation {
 
 object BankRoot {
   import Domain._
+//  import scala.collection._
   
-  val bank: Bank = Map(
+  var bank: Bank = Map(
     "Matt"   -> List(50f),
     "Justin" -> List(50f, 100f, -40f, 700f))
+
+  def update(account: Account, th: TransactionHistory): Bank = {
+    bank = (bank-account) + (account -> th)
+    bank
+  }
 }
+
+
 
 object BankApp extends App {
   import BankRoot._
-  import AccountOperation._
   import Domain._
-  import StateDomain._
 
   // TODO need to persist changes
+
+
   object UcContributeCash {
 
-    def execute(bankAccount: Account, d: Float) = {
+    def execute(bankAccount: Account, cash: Float) = {
 
       val (thOption, _) = BankOperation.findTh(bankAccount).run(bank)
 
-      val contributed = for {
-        th <- thOption
-      } yield {
-        contribute(d).run(th)
+      val contributed = thOption.map { th =>
+        AccountOperation.contribute(cash).run(th)._2
       }
 
-      println(s"contributed: $contributed")
+      contributed.map { th =>
+        BankRoot.update(bankAccount, th)
+      }
+
+      // TODO want to be working solution
+//      for {
+//        (thOption, _) <- BankOperation.findTh(bankAccount).run(bank)
+//        thOld         <- thOption
+//        (_, contr)    <- AccountOperation.contribute(cash).run(thOld)
+//        thNew         <- contr
+//      } yield BankRoot.update(bankAccount, thNew)
+
+
     }
   }
 
