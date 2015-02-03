@@ -1,3 +1,5 @@
+package mpilquist_training
+
 
 /**
  * Simple Domain show-case
@@ -26,7 +28,7 @@ object FirstExample {
 }
 
 object App extends App {
-  import FirstExample._
+  import mpilquist_training.FirstExample._
 
   object FakeSocialService extends SocialService {
     override def getFollowerStatsByUser(u: User): FollowerStats = FollowerStats(0,0)

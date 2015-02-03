@@ -1,3 +1,5 @@
+package mpilquist_training
+
 /**
  * Functional caching with explicit state passing
  */
@@ -51,7 +53,7 @@ object SecondExample {
 }
 
 object Application extends App {
-  import SecondExample._
+  import mpilquist_training.SecondExample._
   println("Start...")
 
   val fss = FakeSocialService

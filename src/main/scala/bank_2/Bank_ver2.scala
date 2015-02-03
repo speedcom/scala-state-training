@@ -13,11 +13,21 @@ case class State[S, +A](run: S => (A, S)) {
   }
 }
 
-object AccountOperation {
-
+package object Domain {
   type Account = String
   type TransactionHistory = List[Float]
+  type Bank = Map[Account, TransactionHistory]
+}
+
+package object StateDomain {
+  import Domain._
   type Tx[A] = State[TransactionHistory, A]
+  type Bx[A] = State[Bank, A]
+}
+
+object AccountOperation {
+  import StateDomain.Tx
+  
 
   def contribute(x: Float): Tx[Unit] = State { account =>
     ((), account :+ x)
@@ -55,10 +65,8 @@ object AccountOperation {
 }
 
 object BankOperation {
-  import AccountOperation._
-  
-  type Bank = Map[Account, TransactionHistory]
-  type Bx[A] = State[Bank, A]
+  import Domain._
+  import StateDomain._
 
   def findTh(account: Account): Bx[Option[TransactionHistory]] = State { bank =>
     (bank.get(account), bank)
@@ -67,21 +75,22 @@ object BankOperation {
 }
 
 object BankRoot {
-  import BankOperation._
-
+  import Domain._
+  
   val bank: Bank = Map(
     "Matt"   -> List(50f),
     "Justin" -> List(50f, 100f, -40f, 700f))
-
 }
 
 object BankApp extends App {
   import BankRoot._
   import AccountOperation._
-  import BankOperation._
+  import Domain._
+  import StateDomain._
 
   // TODO need to persist changes
   object UcContributeCash {
+
     def execute(bankAccount: Account, d: Float) = {
 
       val (thOption, _) = BankOperation.findTh(bankAccount).run(bank)
