@@ -81,7 +81,7 @@ object BankRoot {
     "Justin" -> List(50f, 100f, -40f, 700f))
 
   def update(account: Account, th: TransactionHistory): Bank = {
-    bank = (bank-account) + (account -> th)
+    bank = bank + (account -> th)
     bank
   }
 }
