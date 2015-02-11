@@ -77,11 +77,19 @@ object SoftwareCornerApp_3 extends App {
 
   // PUT
   val s = get[String]
-       .flatMap(s0 => State.put(s0 * s0.length))
+       .flatMap(s0 => put(s0 * s0.length))
        .flatMap(_ => get)
        .map(s1 => s1.length)
        .run("init")
   println(s)
+
+  // FOR-COMPREHENSION
+  val t = for {
+    s0 <- get[String]
+    _  <- put(s0 * s0.length)
+    s1 <- get
+  } yield s1.length
+  println(t.run("init"))
 }
 
 
