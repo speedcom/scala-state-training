@@ -75,8 +75,7 @@ object BankOperation {
 
 object BankRoot {
   import Domain._
-//  import scala.collection._
-  
+
   var bank: Bank = Map(
     "Matt"   -> List(50f),
     "Justin" -> List(50f, 100f, -40f, 700f))
@@ -87,14 +86,9 @@ object BankRoot {
   }
 }
 
-
-
 object BankApp extends App {
   import BankRoot._
   import Domain._
-
-  // TODO need to persist changes
-
 
   object UcContributeCash {
 
