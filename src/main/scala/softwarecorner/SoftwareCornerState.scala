@@ -67,8 +67,21 @@ object SoftwareCornerApp_3 extends App {
 
   println(m1.flatMap(repeat).run("text "))
 
+  // GET
+  val r = get[String]
+       .flatMap(s0 => repeat(s0.length))
+       .flatMap(_ => get)
+       .map(s1 => s1.length)
+       .run("init")
+  println(r)
 
-
+  // PUT
+  val s = get[String]
+       .flatMap(s0 => State.put(s0 * s0.length))
+       .flatMap(_ => get)
+       .map(s1 => s1.length)
+       .run("init")
+  println(s)
 }
 
 
