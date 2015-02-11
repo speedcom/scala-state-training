@@ -1,5 +1,8 @@
 package softwarecorner
 
+import scalaz._
+import Scalaz._
+
 object SoftwareCornerState {
 
   // method that takes a string as a parameter and returns a list of all the words within that string
@@ -20,6 +23,7 @@ object SoftwareCornerState {
     }}
   }
 }
+
 object Text {
   val text = "To jest przykladowy tekst ktory ma ciekawy kontekst i " +
     "mozliwe ze jakies slowa sie w nim powtarzaja albo i nie a gwarantuje ze tak" +
@@ -31,9 +35,7 @@ object SoftwareCornerApp_1 extends App {
   import Text._
 
   val wordsArray = words(text)
-
   val wordCountMap = wordCounts(text)
-
   println(wordCountMap)
 
 }
@@ -52,3 +54,26 @@ object SoftwareCornerApp_2 extends App {
 
   println(map3)
 }
+
+// examples of using scalaz state monad
+object SoftwareCornerApp_3 extends App {
+
+  val m1 = State { s: String => (s, s.size) }
+
+  def repeat(num: Int): State[String, Unit] = State { s: String => (s * num, ()) }
+
+  println(m1.run("hello"))
+  println(repeat(3).run("text "))
+
+  println(m1.flatMap(repeat).run("text "))
+
+
+
+}
+
+
+
+
+
+
+

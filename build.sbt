@@ -13,11 +13,9 @@ scalacOptions ++= Seq(
   "-Xverify",
   "-Yclosure-elim",
   "-Ydead-code",
-  "-Yinline",
-  "-Ywarn-all"
+  "-Yinline"
 )
 
 triggeredMessage := (_ => Watched.clearScreen)
 
-libraryDependencies +=
-  "org.scalaz" %% "scalaz-core" % "7.0.0"
+libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.1.1"
