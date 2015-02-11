@@ -114,6 +114,14 @@ object StateComposabilityExample extends App {
       (0, account)
   }
 
+  // todo
+//  def transfer(x: Float): Tx[Float] =
+//    for {
+//      (d, acc) <- deduct(x)
+//
+//    }
+//  }
+
   /*
   COMPOSABILITY
   - Big state actions can be constructed from little state actions
