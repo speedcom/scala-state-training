@@ -30,6 +30,9 @@ object Text {
     "gdyz tak bedzie ciekawej ha ha ha"
 }
 
+case class Article(headline: String, abstr: String, body: String)
+
+
 object SoftwareCornerApp_1 extends App {
   import SoftwareCornerState._
   import Text._
@@ -44,7 +47,6 @@ object SoftwareCornerApp_2 extends App {
   import SoftwareCornerState._
   import Text._
 
-  case class Article(headline: String, abstr: String, body: String)
   val article = Article(text, text, text)
 
   val map0 = Map[String, Int]()
@@ -123,6 +125,17 @@ object SoftwareCornerApp_4 extends App {
   }
 
   println(wordCounts(Text.text).run(Map[String, Int]()))
+
+  val article = Article(Text.text, Text.text, Text.text)
+
+  val m = for {
+    _ <- wordCounts(article.abstr)
+    _ <- wordCounts(article.headline)
+    _ <- wordCounts(article.body)
+  } yield ()
+
+  val (wordMap, _) = m.run(Map[String, Int]())
+  println(wordMap)
 
 
 
