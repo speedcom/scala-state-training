@@ -90,6 +90,14 @@ object SoftwareCornerApp_3 extends App {
     s1 <- get
   } yield s1.length
   println(t.run("init"))
+
+  // MODIFY
+  val u = for {
+    _  <- modify { s: String => s * s.length }
+    s1 <- get
+  } yield s1.length
+  println(u.run("init"))
+
 }
 
 
