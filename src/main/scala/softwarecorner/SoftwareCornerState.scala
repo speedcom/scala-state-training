@@ -98,7 +98,7 @@ object SoftwareCornerApp_3 extends App {
   } yield s1.length
   println(u.run("init"))
 
-  // GETS
+  // GETS - nice and clean solution (there is no obsolete states within computation)
   val v = for {
     _ <- modify { s: String => s * s.length }
     size <- gets { s: String => s.length }
