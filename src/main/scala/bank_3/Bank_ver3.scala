@@ -1,7 +1,5 @@
 package bank_3
 
-import bank_2.AccountOperation
-
 import scalaz._
 import Scalaz._
 
@@ -84,8 +82,8 @@ object BankApp extends App {
       val oldTh: TransactionHistory = BankOperation.findAccount(bankAccount)(bank)
 
       val m = for {
-        _  <- AccountOperation.contribute(cash)
-        th <- AccountOperation.balance
+        _  <- TransactionOperation.contribute(cash)
+        th <- TransactionOperation.balance
       } yield th
       val (newTh, _) = m.run(oldTh)
 
