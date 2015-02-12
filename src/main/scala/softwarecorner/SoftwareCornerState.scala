@@ -91,7 +91,9 @@ object SoftwareCornerApp_3 extends App {
   } yield s1.length
   println(t.run("init"))
 
-  // MODIFY
+  // MODIFY -
+  // PROS: no longer have to worry about continuing to hold a reference to obsolete state s0
+  // CONS: we still keep reference to s1 state
   val u = for {
     _  <- modify { s: String => s * s.length }
     s1 <- get
@@ -107,6 +109,24 @@ object SoftwareCornerApp_3 extends App {
 
 }
 
+// Re-examining word count example
+object SoftwareCornerApp_4 extends App {
+
+//  def words(str: String): State[String, Array[String]] = State { s: String => (s, s.split(" ")) }
+  def words(str: String): Array[String] = str.split(" ")
+
+  def wordCounts(str: String): State[Map[String, Int], Unit] = modify { currMap: Map[String, Int] =>
+    words(str).foldLeft(currMap) { (acc, word) =>
+      val count: Int = acc.getOrElse(word, 0) + 1
+      acc + (word -> count)
+    }
+  }
+
+  println(wordCounts(Text.text).run(Map[String, Int]()))
+
+
+
+}
 
 
 
