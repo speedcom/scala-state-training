@@ -111,13 +111,12 @@ object SoftwareCornerApp_3 extends App {
 
 }
 
-// Re-examining word count example
+// Re-examining word count example - SINGLE ARTICLE
 object SoftwareCornerApp_4 extends App {
 
-//  def words(str: String): State[String, Array[String]] = State { s: String => (s, s.split(" ")) }
   def words(str: String): Array[String] = str.split(" ")
 
-  def wordCounts(str: String): State[Map[String, Int], Unit] = modify { currMap: Map[String, Int] =>
+  def wordCounts(str: String) = modify { currMap: Map[String, Int] =>
     words(str).foldLeft(currMap) { (acc, word) =>
       val count: Int = acc.getOrElse(word, 0) + 1
       acc + (word -> count)
@@ -137,11 +136,30 @@ object SoftwareCornerApp_4 extends App {
   val (wordMap, _) = m.run(Map[String, Int]())
   println(wordMap)
 
-
-
 }
 
+// Re-examining word count example - LIST OF ARTICLES
+object SoftwareCornerApp_5 extends App {
+  import SoftwareCornerApp_4.wordCounts
 
+  val articles = List.fill(5)(Article(headline = Text.text, abstr = Text.text, body = Text.text))
+
+  def wordCountsForArticle(article: Article) =
+    for {
+      _ <- wordCounts(article.abstr)
+      _ <- wordCounts(article.headline)
+      _ <- wordCounts(article.body)
+    } yield ()
+
+  val ms = articles map wordCountsForArticle
+
+  val m = ms.foldLeft(State { s: Map[String, Int] => (s, ()) }) { (resultM, currM) =>
+    resultM flatMap { _: Unit => currM }
+  }
+  val (wordMap, _) = m.run(Map[String, Int]())
+  println(wordMap)
+
+}
 
 
 
