@@ -159,6 +159,10 @@ object SoftwareCornerApp_5 extends App {
   val (wordMap, _) = m.run(Map[String, Int]())
   println(wordMap)
 
+  // traverseS
+  val mm = articles traverseS wordCountsForArticle
+  val (wordMapS, _) = m.run(Map[String, Int]())
+  println(wordMapS)
 }
 
 
