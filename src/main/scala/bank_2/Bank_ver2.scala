@@ -73,6 +73,7 @@ object BankOperation {
 
 }
 
+// OUTER WORLD - MUTABLE ONE
 object BankRoot {
   import Domain._
 
@@ -115,6 +116,8 @@ object BankApp extends App {
 
     }
   }
+
+
 
   println(s"Bank: $bank")
   UcContributeCash.execute("Matt", 100f)
